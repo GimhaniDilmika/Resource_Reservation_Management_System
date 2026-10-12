@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  STAFF
+  MEMBER
+}
+
+enum ResourceStatus {
+  AVAILABLE
+  MAINTENANCE
+  INACTIVE
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  REJECTED
+}
+
+enum MaintenanceStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  department   String
+  role         Role          @default(MEMBER)
+  avatarUrl    String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[]
+  activityLogs ActivityLog[]
+
+  @@index([department])
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String
+  slug        String     @unique
+  description String?
+  icon        String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  resources   Resource[]
+}
+
+model Resource {
+  id                 String           @id @default(uuid())
+  name               String
+  code               String           @unique
+  description        String?
+  categoryId         String
+  category           Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  location           String
+  capacity           Int              @default(1)
+  status             ResourceStatus   @default(AVAILABLE)
+  isApprovalRequired Boolean          @default(false)
+  maxDurationMinutes Int              @default(240)
+  imageUrl           String?
+  amenities          String[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  reservations       Reservation[]
+  maintenanceLogs    MaintenanceLog[]
+  activityLogs       ActivityLog[]
+
+  @@index([categoryId, status])
+  @@index([location])
+}
+
+model Reservation {
+  id                 String            @id @default(uuid())
+  title              String
+  resourceId         String
+  resource           Resource          @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  userId             String
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startTime          DateTime
+  endTime            DateTime
+  status             ReservationStatus @default(CONFIRMED)
+  notes              String?
+  attendeesCount     Int               @default(1)
+  checkInTime        DateTime?
+  cancellationReason String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  activityLogs       ActivityLog[]
+
+  @@index([resourceId, startTime, endTime])
+  @@index([userId, startTime])
+  @@index([status])
+}
+
+model MaintenanceLog {
+  id          String            @id @default(uuid())
+  resourceId  String
+  resource    Resource          @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  startTime   DateTime
+  endTime     DateTime
+  technician  String?
+  status      MaintenanceStatus @default(SCHEDULED)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([resourceId, startTime, endTime])
+}
+
+model ActivityLog {
+  id            String       @id @default(uuid())
+  action        String
+  details       String
+  userId        String?
+  user          User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resourceId    String?
+  resource      Resource?    @relation(fields: [resourceId], references: [id], onDelete: SetNull)
+  reservationId String?
+  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  createdAt     DateTime     @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+}
