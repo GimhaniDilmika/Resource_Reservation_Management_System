@@ -20,10 +20,12 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
 
-  // 1. Seed Users
+  // 1. Seed Users — IDs must match the hardcoded IDs in src/context/user-context.tsx
+  //    so that persona switching, "My Bookings" filtering, and ownership checks work.
   const users = await Promise.all([
     prisma.user.create({
       data: {
+        id: "user-sarah",
         name: "Sarah Jenkins",
         email: "sarah.j@primewave.com",
         department: "Operations",
@@ -33,6 +35,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
+        id: "user-alex",
         name: "Alex Rivera",
         email: "alex.r@primewave.com",
         department: "Hardware Engineering",
@@ -42,6 +45,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
+        id: "user-priya",
         name: "Priya Sharma",
         email: "priya.s@primewave.com",
         department: "Software Engineering",
@@ -51,6 +55,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
+        id: "user-marcus",
         name: "Marcus Chen",
         email: "marcus.c@primewave.com",
         department: "Facilities & IT",
@@ -60,6 +65,7 @@ async function main() {
     }),
     prisma.user.create({
       data: {
+        id: "user-elena",
         name: "Elena Rostova",
         email: "elena.r@primewave.com",
         department: "Product & Design",

@@ -25,6 +25,7 @@ interface AnalyticsClientProps {
     departmentCounts: Record<string, number>;
     hourlyDistribution: Record<number, number>;
     activityLogs: any[];
+    averageDurationHours: number;
   };
 }
 
@@ -119,7 +120,7 @@ export function AnalyticsClient({ data }: AnalyticsClientProps) {
             <Clock size={16} color="#f59e0b" />
           </div>
           <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "#f59e0b", marginTop: "0.4rem" }}>
-            2.4 hrs
+            {data.averageDurationHours} hrs
           </div>
           <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginTop: "0.2rem" }}>
             Per scheduled session

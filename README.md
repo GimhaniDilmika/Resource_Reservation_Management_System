@@ -177,8 +177,8 @@ Detailed architectural specifications are provided in [`docs/ER_DIAGRAM.md`](doc
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/GimhaniDilmika/PrimeWave.git
-cd PrimeWave
+git clone https://github.com/GimhaniDilmika/Resource_Reservation_Management_System.git
+cd Resource_Reservation_Management_System
 ```
 
 ---
@@ -317,5 +317,5 @@ This project fulfills all requirements specified in the **PrimeWave Lab Software
 ---
 
 ## 👨‍💻 Author & Acknowledgements
-- **Candidate**: Software Engineering Internship Candidate
+- **Candidate**: Gimhani Dilmika
 - **Organization**: PrimeWave Lab (Pvt) Ltd (*"Turning Complexity into Possibility"*)
