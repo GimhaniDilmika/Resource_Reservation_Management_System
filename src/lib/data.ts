@@ -303,6 +303,16 @@ export async function getAnalyticsSummary() {
     }
   });
 
+  // Compute average reservation duration
+  let totalDurationHours = 0;
+  recentReservations.forEach((res) => {
+    totalDurationHours += (res.endTime.getTime() - res.startTime.getTime()) / (1000 * 60 * 60);
+  });
+  const averageDurationHours =
+    recentReservations.length > 0
+      ? parseFloat((totalDurationHours / recentReservations.length).toFixed(1))
+      : 0;
+
   return {
     totalResources,
     totalReservations,
@@ -314,5 +324,6 @@ export async function getAnalyticsSummary() {
     departmentCounts,
     hourlyDistribution,
     activityLogs,
+    averageDurationHours,
   };
 }
